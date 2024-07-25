@@ -73,11 +73,7 @@ func main() {
 	}
 
 	// * ==========================================
-	var chickens = []map[string]string{
-		map[string]string{"name": "chicken blue", "gender": "male"},
-		map[string]string{"name": "chicken red", "gender": "male"},
-		map[string]string{"name": "chicken yellow", "gender": "female"},
-	}
+	var chickens = []map[string]string{{"name": "chicken blue", "gender": "male"}, {"name": "chicken red", "gender": "male"}, {"name": "chicken yellow", "gender": "female"}}
 
 	for _, chick := range chickens {
 		fmt.Println(chick["name"], chick["gender"])

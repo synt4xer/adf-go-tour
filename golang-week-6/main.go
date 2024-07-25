@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 // A.24.1 Deklarasi struct
@@ -11,10 +12,45 @@ type Person struct {
 	name string
 	age  int
 }
+
 type Student struct {
 	Person // embedded in struct
 	age    int
 	grade  int
+}
+
+type student struct {
+	Person struct { // anonymous struct
+		name string
+		age  int
+	}
+	grade   int
+	hobbies []string
+}
+
+type People = Person // type alias
+
+type People2 = struct {
+	name string
+	age  int
+}
+
+type Students1 struct {
+	name string
+	age  int
+}
+
+func (s Students1) SayHello() {
+	fmt.Println("Hello", s.name)
+}
+
+func (s Students1) getNameAt(i int) string {
+	return strings.Split(s.name, " ")[i-1]
+}
+
+// to effect change name, need using pointer
+func (s *Students1) changeName(name string) {
+	s.name = name
 }
 
 func main() {
@@ -127,7 +163,7 @@ func main() {
 	s1Anon.grade = 2
 
 	// initialized with value
-	var s2Anon = struct {
+	var _ = struct {
 		Person
 		grade int
 	}{
@@ -140,6 +176,53 @@ func main() {
 	fmt.Println("grade :", s1Anon.grade)
 
 	// The end of A.24 Struct
+	var students = []Person{
+		{name: "diah", age: 2},
+		{name: "ilham", age: 4},
+		{name: "iki", age: 6},
+	}
+
+	for _, value := range students {
+		fmt.Println(value.name, "age is", value.age)
+	}
+
+	var teachers = []struct {
+		Person
+		grade int
+	}{
+		{Person: Person{"udin", 2}, grade: 8},
+		{Person: Person{"adil", 4}, grade: 10},
+		{Person: Person{"jarwo", 6}, grade: 20},
+	}
+
+	for _, teacher := range teachers {
+		fmt.Println("teacher name is", teacher.name)
+		fmt.Println("teacher age is", teacher.age)
+		fmt.Println("teacher grade is", teacher.grade)
+	}
+
+	var anotherStudent = student{}
+	anotherStudent.Person = struct {
+		name string
+		age  int
+	}{"adi", 2}
+	anotherStudent.grade = 2
+	anotherStudent.hobbies = []string{"mancing", "maling"}
+
+	var orang = People{name: "orang", age: 20}
+	fmt.Println(orang)
+
+	// A.25 Method
+	var dika = Students1{"dika rungin", 22}
+	dika.SayHello()
+	var dikaName = dika.getNameAt(2)
+	fmt.Println(dikaName)
+
+	// ??? gada bedanya
+	var andar = &Students1{"andar niki", 30}
+	andar.SayHello()
+	andar.changeName("adi lego")
+	andar.SayHello()
 }
 
 func change(original *int, value int) {
